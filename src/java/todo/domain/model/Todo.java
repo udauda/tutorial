@@ -40,7 +40,7 @@ public class Todo implements Serializable {
     private Integer todoId;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 128)
+    @Size(min = 1, max = 128, message="1～128文字の間で入力してください。")
     @Column(name = "TODO_TITLE")
     private String todoTitle;
     @Basic(optional = false)

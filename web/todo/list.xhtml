@@ -2,9 +2,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Todo List</title>
+        <title>TODO 一覧</title>
         <style type="text/css">
             .strike {
                 text-decoration : line-through;
@@ -29,46 +30,47 @@
     <h:body>
         <h:messages layout="table" styleClass="alert alert-success" rendered="#{facesContext.maximumSeverity.ordinal == 0}" />
         <h:messages layout="table" styleClass="alert alert-error" rendered="#{facesContext.maximumSeverity.ordinal > 0}" />
-        <h2>Create Todo</h2>
+        <h2>新規TODO登録</h2>
         <h:form>
             <h:panelGrid columns="3">
-            <h:outputLabel value="Title: " />
+            <h:outputLabel value="TODO内容: " />
             <h:inputText id="title" value="#{todoController.todo.todoTitle}" />
-            <h:message for="title" errorClass="alert alert-error" />
-            <h:commandButton value="Create" action="#{todoController.create}" />
+            <h:commandButton value="登録" action="#{todoController.create}" />
             </h:panelGrid>
         </h:form>
-        <h2>Todo List</h2>
-        <h:dataTable value="#{todoController.todoList}" var="todo">
-        <h:column>
+        <h2>TODO List</h2>
+        <p:dataTable value="#{todoController.todoList}" var="todo" sortMode="multiple">
+        <p:column sortBy="#{todo.todoId}">
             <f:facet name="header">
-                <h:outputText value="TODO ID" />
+                <h:outputText value="ID" />
             </f:facet>
             <h:outputText value="#{todo.todoId}" />
-        </h:column>
-        <h:column>
+        </p:column>
+        <p:column sortBy="#{todo.todoTitle}">
             <f:facet name="header">
-                <h:outputText value="Title" />
+                <h:outputText value="TODO" />
             </f:facet>
             <h:outputText value="#{todo.todoTitle}" rendered="#{!todo.finished}" />
             <h:outputText value="#{todo.todoTitle}" rendered="#{todo.finished}" class="strike"/>
-        </h:column>
-        <h:column>
+        </p:column>
+        <p:column sortBy="#{todo.createdAt}">
             <f:facet name="header">
-                <h:outputText value="Created At" />
+                <h:outputText value="登録日時" />
             </f:facet>
             <h:outputText value="#{todo.createdAt}" ><f:convertDateTime type="both" timeZone="Japan"/></h:outputText>
-        </h:column>
-        <h:column>
+        </p:column>
+        <p:column>
             <f:facet name="header">
-                <h:outputText value="Actions" />
+                <h:outputText value="操作" />
             </f:facet>
             <h:form>
-                <h:commandButton value="Done" action="#{todoController.finish(todo.todoId)}" disabled="#{todo.finished}" />
-            <h:commandButton value="Delete" action="#{todoController.delete(todo.todoId)}" />
+                <p:commandButton value="完了" action="#{todoController.finish(todo.todoId)}" disabled="#{todo.finished}" />
+                <p:commandButton value="削除" action="#{todoController.delete(todo.todoId)}" />
             </h:form>
-        </h:column>
-        </h:dataTable>
+        </p:column>
+        </p:dataTable>
+        <h2>TODO 消化率</h2>
+        <p:pieChart value="#{todoController.model}" legendPosition="w" showDataLabels="true" style="width:400px;" />
     </h:body>
 </html>
 

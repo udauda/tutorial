@@ -31,6 +31,11 @@ public class TodoService {
     @PersistenceContext
     protected EntityManager entityManager;
     
+    /**
+     * find by todo id.
+     * @param todoId 検索するTodo id
+     * @return 検索結果のTodo object
+     */
     public Todo findByTodoId(Integer todoId) {
         Todo todo = entityManager.find(Todo.class, todoId);
         if(todoId == null) {
@@ -52,6 +57,11 @@ public class TodoService {
         return query.getResultList();
     }
 
+    /**
+     * new Todo create.
+     * @param todo 新規登録するTodo object
+     * @return 新規登録したTodo object
+     */
     public Todo create(Todo todo) {
         TypedQuery<Long> query = entityManager.createQuery("SELECT COUNT(x) FROM Todo x WHERE x.finished = :finished", Long.class)
                 .setParameter("finished", false);
@@ -66,8 +76,13 @@ public class TodoService {
         return todo;
     }
     
+    /**
+     * Todo finish.
+     * @param todoId 完了状態にするTodo id
+     * @return 完了状態にしたTodo object
+     */
     public Todo finish(Integer todoId) {
-        Todo todo = findByTodoId(todoId);
+        Todo todo = this.findByTodoId(todoId);
         if(todo.isFinished()) {
             throw new BusinessException("[E002] 該当IDのTODOはすでに完了しています。TODO ID = " + todoId);    
         }
@@ -76,6 +91,10 @@ public class TodoService {
         return todo;
     }
     
+    /**
+     * Todo delete.
+     * @param todoId 削除するTodo id 
+     */
     public void delete(Integer todoId) {
         Todo todo = findByTodoId(todoId);
         entityManager.remove(todo);
